@@ -2,6 +2,7 @@ package com.codepath.apps.androidtwitterclient;
 
 import org.scribe.builder.api.Api;
 import org.scribe.builder.api.FlickrApi;
+import org.scribe.builder.api.TwitterApi;
 
 import android.content.Context;
 
@@ -22,7 +23,7 @@ import com.loopj.android.http.RequestParams;
  * 
  */
 public class TwitterClient extends OAuthBaseClient {
-    public static final Class<? extends Api> REST_API_CLASS = FlickrApi.class; // Change this
+    public static final Class<? extends Api> REST_API_CLASS = TwitterApi.class; // Change this
     public static final String REST_URL = "https://api.twitter.com/1.1"; // Change this, base API URL
     public static final String REST_CONSUMER_KEY = "2ehHGscfNZa17LSlE6EBA";       // Change this
     public static final String REST_CONSUMER_SECRET = "daqFYOWA1TZh0KobxPnqXQVggL3J0xxVDV8NiTL8Cw"; // Change this
