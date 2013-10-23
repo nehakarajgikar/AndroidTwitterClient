@@ -7,45 +7,62 @@
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context=".ComposeActivity" >
-	
-	<ImageView
-	    android:id="@+id/ivComposeProfile"
-	    android:layout_width="wrap_content" 
-	    android:layout_height="wrap_content"
-	    android:layout_marginLeft="8dp"
-        android:layout_marginTop="8dp"
-        android:contentDescription="profile pic"
-        
-	    />
-    <TextView
-        android:id="@+id/tvComposeName"
-        
+
+    <ImageView
+        android:id="@+id/ivComposeProfile"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_toRightOf="@id/ivComposeProfile"
+        android:layout_marginLeft="8dp"
+        android:layout_marginTop="8dp"
+        android:contentDescription="profile pic" />
+
+    <TextView
+        android:id="@+id/tvComposeName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_alignTop="@id/ivComposeProfile"
         android:layout_marginLeft="2dp"
-        />
+        android:layout_toRightOf="@id/ivComposeProfile" />
+
     <TextView
         android:id="@+id/tvComposeScreenName"
-        android:layout_width="wrap_content" 
-        android:layout_height= "wrap_content"
-        android:layout_toRightOf="@id/ivComposeProfile"
-        android:layout_below="@id/tvComposeName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_alignLeft="@id/tvComposeName"
-        
-        
-        />
+        android:layout_below="@id/tvComposeName"
+        android:layout_toRightOf="@id/ivComposeProfile" />
+
     <EditText
-        android:id = "@+id/etTweetText"
+        android:id="@+id/etTweetText"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        
+        android:layout_alignLeft="@id/ivComposeProfile"
+        android:layout_below="@id/ivComposeProfile"
         android:layout_marginRight="8dp"
         android:layout_marginTop="10dp"
-        android:layout_below="@id/ivComposeProfile"
-        android:layout_alignLeft="@id/ivComposeProfile"
-        android:hint="Your tweet goes here" 
-        />
+        android:hint="@string/your_tweet_goes_here"
+        android:inputType="textMultiLine"
+        android:maxLength="140"
+        android:scrollHorizontally="false"
+        android:singleLine="false" />
+
+    <TextView
+        android:id="@+id/tvCharRemaining"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_below="@id/etTweetText"
+        android:text="@string/_characters_remaining"
+        android:textColor="@color/granite" />
+
+    <TextView
+        android:id="@+id/tvCharCount"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/etTweetText"
+        android:layout_toLeftOf="@id/tvCharRemaining"
+        android:text="@string/default_char_count"
+        android:textColor="@color/granite" 
+        android:layout_marginRight="2dp"/>
 
 </RelativeLayout>

@@ -104,6 +104,9 @@ public class TimelineActivity extends Activity {
 				tweetAdapter.insert(newTweet, 0);
 				
 			}
+			if (resultCode == RESULT_CANCELED){
+				Log.d(TAG, "Compose cancelled");
+			}
 		}
 		super.onActivityResult(requestCode, resultCode, data);
 	}

@@ -7,10 +7,15 @@ import org.json.JSONObject;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.Editable;
 import android.text.Html;
+import android.text.TextWatcher;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.view.View.OnKeyListener;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -24,6 +29,8 @@ import com.nostra13.universalimageloader.core.ImageLoader;
 public class ComposeActivity extends Activity {
 	public static final String TAG = "TWITTER";
 	public User user;
+	public TextView tvNumCharsRemaining;
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -38,6 +45,32 @@ public class ComposeActivity extends Activity {
 		TextView screenName = (TextView) findViewById(R.id.tvComposeScreenName);
 		screenName.setText(Html.fromHtml("<font color=#565051><small>" + "@"
 				+ user.getScreenName() + "</small></font>"));
+		tvNumCharsRemaining = (TextView) findViewById(R.id.tvCharCount);
+		EditText tweet = (EditText) findViewById(R.id.etTweetText);
+		tweet.addTextChangedListener(new TextWatcher() {
+
+			@Override
+			public void onTextChanged(CharSequence s, int start, int before, int count) {
+				tvNumCharsRemaining = (TextView) findViewById(R.id.tvCharCount);
+				int charCount = start + count;
+				Log.i(TAG, "in on text changed: " + s + " start: " + start
+						+ " before: " + before + " count: " + count);
+				tvNumCharsRemaining.setText(""+charCount);
+
+			}
+
+			@Override
+			public void beforeTextChanged(CharSequence s, int start, int count,
+					int after) {
+
+			}
+
+			@Override
+			public void afterTextChanged(Editable s) {
+
+			}
+		});
+
 	}
 
 	@Override
@@ -53,15 +86,14 @@ public class ComposeActivity extends Activity {
 		Toast.makeText(getApplicationContext(), "Tweeting..", Toast.LENGTH_LONG)
 				.show();
 		EditText tweet = (EditText) findViewById(R.id.etTweetText);
+
 		if (tweet.getText() == null || tweet.getText().toString() == null
 				|| tweet.getText().toString().equalsIgnoreCase("")) {
 			Toast.makeText(getApplicationContext(), "Say something!",
 					Toast.LENGTH_SHORT).show();
 			return;
 		}
-		
 
-		
 		Log.d(TAG, "About to tweet: " + tweet.getText().toString());
 		TwitterClientApp.getRestClient().postTweet(tweet.getText().toString(),
 				new JsonHttpResponseHandler() {
@@ -74,11 +106,16 @@ public class ComposeActivity extends Activity {
 						// super.onSuccess(arg0);
 
 					}
-					
+
 				});
-		Tweet t = new Tweet(this.user,tweet.getText().toString(),new Date());
-		i.putExtra("userTweet",t);
+		Tweet t = new Tweet(this.user, tweet.getText().toString(), new Date());
+		i.putExtra("userTweet", t);
 		setResult(RESULT_OK, i);
+		finish();
+	}
+	
+	public void onCancelAction(MenuItem mi){
+		setResult(RESULT_CANCELED);
 		finish();
 	}
 
