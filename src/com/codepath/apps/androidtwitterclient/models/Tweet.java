@@ -1,75 +1,91 @@
 package com.codepath.apps.androidtwitterclient.models;
 
+import java.io.Serializable;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.Locale;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-public class Tweet {
+import android.util.Log;
 
+public class Tweet implements Serializable {
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -2327578244944233945L;
+	private static final String TAG = "TWITTER";
 	private User user;
-	private JSONObject jsonObject;
+	private long id;
+	private String body;
+	private boolean isFavourited;
+	private boolean isRetweeted;
+	private Date timestamp;
+
+	public Tweet(){}
 	
-	public User getUser(){
+	public Tweet(User user, String body, Date timestamp){
+		this.user = user;
+		this.body = body;
+		this.timestamp = timestamp;
+	}
+	
+	public User getUser() {
 		return this.user;
 	}
-	
-	public long getId(){
-		long id = 0;
-		try {
-			id = jsonObject.getLong("id");
-		} catch (JSONException e) {
-			e.printStackTrace();
-		}
-		return id;
+
+	public long getId() {
+
+		return this.id;
 	}
-	
-	public String getBody(){
-		String text = null;
-		try{
-			text = jsonObject.getString("text");
-			
-		}catch(JSONException e){
-			e.printStackTrace();
-		}
-		return text;
+
+	public Date getTimestamp() {
+		return this.timestamp;
 	}
-	
-	public boolean isFavourited(){
-		boolean isFavourited = false;
-		try {
-			isFavourited = jsonObject.getBoolean("favorited");
-		} catch (JSONException e) {
-			e.printStackTrace();
-		}
-		return isFavourited;
+
+	public String getBody() {
+		return this.body;
 	}
-	
-	public boolean isRetweeted(){
-		boolean isRetweeted = false;
-		try {
-			isRetweeted = jsonObject.getBoolean("retweeted");
-		} catch (JSONException e) {
-			e.printStackTrace();
-		}
-		return isRetweeted;
+
+	public boolean isFavourited() {
+
+		return this.isFavourited;
 	}
-	
-	public static Tweet fromJSON(JSONObject jsonObject){
+
+	public boolean isRetweeted() {
+
+		return this.isRetweeted;
+	}
+
+	public static Tweet fromJSON(JSONObject jsonObject) {
 		Tweet tweet = new Tweet();
-		
+
 		try {
-			tweet.jsonObject = jsonObject;
+			tweet.id = jsonObject.getLong("id");
+			tweet.body = jsonObject.getString("text");
+			tweet.isFavourited = jsonObject.getBoolean("favorited");
+			tweet.isRetweeted = jsonObject.getBoolean("retweeted");
+			SimpleDateFormat format = new SimpleDateFormat(
+					"EEE MMM dd HH:mm:ss Z yyyy", Locale.ENGLISH);
+
+			tweet.timestamp = format.parse(jsonObject.getString("created_at"));
 			tweet.user = User.fromJSON(jsonObject.getJSONObject("user"));
 		} catch (JSONException e) {
 			e.printStackTrace();
 			return null;
+		} catch (ParseException e) {
+			Log.e(TAG, "Parsing problem for timestamp");
+			e.printStackTrace();
 		}
 		return tweet;
 	}
-	
-	public static ArrayList<Tweet> fromJSON(JSONArray jsonArray){
+
+	public static ArrayList<Tweet> fromJSON(JSONArray jsonArray) {
 		ArrayList<Tweet> tweets = new ArrayList<Tweet>();
 		for (int i = 0; i < jsonArray.length(); i++) {
 			JSONObject tweetJson = null;
@@ -80,13 +96,26 @@ public class Tweet {
 				continue;
 			}
 			Tweet tweet = Tweet.fromJSON(tweetJson);
-			if(tweet!=null){
+			if (tweet != null) {
 				tweets.add(tweet);
 			}
-				
+
 		}
 		return tweets;
 	}
-	
-	
+
+	public static long getMaxId(ArrayList<Tweet> tweets) {
+		Long least = Long.MAX_VALUE;
+		for (int i = 0; i < tweets.size(); i++) {
+			if (tweets.get(i).getId() < least) {
+				least = tweets.get(i).getId();
+			}
+
+		}
+		return least;
+	}
+
+	public String toString(){
+		return this.user.getName() +" tweeted: "+this.body;
+	}
 }

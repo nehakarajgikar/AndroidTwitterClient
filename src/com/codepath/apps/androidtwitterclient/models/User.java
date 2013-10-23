@@ -6,12 +6,11 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 public class User implements Serializable {
-	
+
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = -7366615661536349559L;
-	protected JSONObject jsonObject;
 	private String name;
 	private long id;
 	private String screenName;
@@ -20,100 +19,64 @@ public class User implements Serializable {
 	private int numTweets;
 	private int followersCount;
 	private int friendsCount;
-	
+
 	public String getName() {
-//		String name = null;
-		try {
-			name = jsonObject.getString("name");
-		} catch (JSONException e) {
-			e.printStackTrace();
-		}
-		return name;
+		return this.name;
 	}
 
 	public long getId() {
-//		long id = 0;
-		try {
-			id = jsonObject.getLong("id");
-		} catch (JSONException e) {
-			e.printStackTrace();
-		}
-		return id;
+
+		return this.id;
 	}
 
 	public String getScreenName() {
-//		String screenName = null;
-		try {
-			screenName = jsonObject.getString("screen_name");
-		} catch (JSONException e) {
-			e.printStackTrace();
-		}
-		return screenName;
+
+		return this.screenName;
 	}
 
 	public String getProfileImageUrl() {
-//		String imageUrl = null;
-		try {
-			profileImageUrl = jsonObject.getString("profile_image_url");
-		} catch (JSONException e) {
-			e.printStackTrace();
-		}
-		return profileImageUrl;
+		return this.profileImageUrl;
 
 	}
 
 	public String getProfileBackgroundImageUrl() {
-		String imageUrl = null;
-		try {
-			profileBackgroundImageUrl = jsonObject.getString("profile_background_image_url");
-		} catch (JSONException e) {
-			e.printStackTrace();
-		}
-		return profileBackgroundImageUrl;
+
+		return this.profileBackgroundImageUrl;
 	}
 
 	public int getNumTweets() {
-//		int numTweets = 0;
-		try {
-			numTweets = jsonObject.getInt("statuses_count");
-		} catch (JSONException e) {
-			e.printStackTrace();
-		}
-		return numTweets;
+		return this.numTweets;
 	}
 
 	public int getFollowersCount() {
-//		int followersCount = 0;
-		try {
-			followersCount = jsonObject.getInt("followers_count");
-		} catch (JSONException e) {
-			e.printStackTrace();
-		}
-		return followersCount;
+		return this.followersCount;
 	}
 
 	public int getFriendsCount() {
-//		int friendsCount = 0;
-		try {
-			friendsCount = jsonObject.getInt("friends_count");
-		} catch (JSONException e) {
-			e.printStackTrace();
-		}
-		return friendsCount;
+		return this.friendsCount;
 
 	}
 
 	public static User fromJSON(JSONObject jsonObject) {
 		User user = new User();
 		try {
-			user.jsonObject = jsonObject;
-		} catch (Exception e) {
+			user.id = jsonObject.getLong("id");
+			user.name = jsonObject.getString("name");
+			user.screenName = jsonObject.getString("screen_name");
+			user.followersCount = jsonObject.getInt("followers_count");
+			user.friendsCount = jsonObject.getInt("friends_count");
+			user.numTweets = jsonObject.getInt("statuses_count");
+			user.profileImageUrl = jsonObject.getString("profile_image_url");
+			user.profileBackgroundImageUrl = jsonObject
+					.getString("profile_background_image_url");
+		} catch (JSONException e) {
 			e.printStackTrace();
+			return null;
 		}
 		return user;
 	}
-	
-	public String toString(){
-		return this.getName()+"  "+this.getScreenName();
+
+	public String toString() {
+		return this.getName() + "  " + this.getScreenName();
 	}
 }

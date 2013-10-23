@@ -1,7 +1,6 @@
 package com.codepath.apps.androidtwitterclient;
 
 import org.scribe.builder.api.Api;
-import org.scribe.builder.api.FlickrApi;
 import org.scribe.builder.api.TwitterApi;
 
 import android.content.Context;
@@ -46,9 +45,15 @@ public class TwitterClient extends OAuthBaseClient {
 				REST_CONSUMER_SECRET, REST_CALLBACK_URL);
 	}
 
-	public void getHomeTimeline(AsyncHttpResponseHandler handler) {
+	public void getHomeTimeline(long maxId, AsyncHttpResponseHandler handler) {
+		RequestParams params = null;
+		if (maxId != 0) {
+			params = new RequestParams();
+			maxId = maxId - 1;
+			params.put("max_id", "" + maxId);
+		}
 		String url = getApiUrl("statuses/home_timeline.json");
-		client.get(url, null, handler);
+		client.get(url, params, handler);
 	}
 
 	public void getCredentials(AsyncHttpResponseHandler handler) {

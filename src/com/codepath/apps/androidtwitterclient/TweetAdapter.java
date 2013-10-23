@@ -7,6 +7,7 @@ import java.util.List;
 
 import android.content.Context;
 import android.text.Html;
+import android.text.format.DateUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,7 +22,7 @@ import com.nostra13.universalimageloader.core.ImageLoader;
  * @author neha
  * 
  */
-public class TweetAdapter extends ArrayAdapter {
+public class TweetAdapter extends ArrayAdapter<Tweet> {
 
 	public TweetAdapter(Context context, List<Tweet> tweets) {
 		super(context, 0, tweets);
@@ -42,13 +43,18 @@ public class TweetAdapter extends ArrayAdapter {
 				tweet.getUser().getProfileImageUrl(), imageView);
 
 		TextView name = (TextView) view.findViewById(R.id.tvName);
-		String formattedName = "<b>" + tweet.getUser().getName() + "</b>"
+		String formattedName = "<b>" + tweet.getUser().getName() + "    </b>"
 				+ "<small><font color='#FF00AA'>@" + tweet.getUser().getScreenName()
 				+ "</font></small>";
 		name.setText(Html.fromHtml(formattedName));
 		TextView body = (TextView) view.findViewById(R.id.tvBody);
-		String formattedBody = "<font color=#565051>" + tweet.getBody() +"</font>";
+		String formattedBody = "<font color=#565051>" + tweet.getBody() + "</font>";
 		body.setText(Html.fromHtml(formattedBody));
+		String time = "<font color = #837E7C><small>" +DateUtils.getRelativeDateTimeString(getContext(), tweet
+				.getTimestamp().getTime(), DateUtils.SECOND_IN_MILLIS,
+				DateUtils.WEEK_IN_MILLIS, 0) +"</small></font>";
+		TextView timestamp = (TextView) view.findViewById(R.id.tvTimestamp);
+		timestamp.setText(Html.fromHtml(time));
 		return view;
 
 	}
