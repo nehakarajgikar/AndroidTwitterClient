@@ -11,25 +11,35 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.ListView;
+import android.widget.Toast;
 
 import com.codepath.apps.androidtwitterclient.models.Tweet;
 import com.codepath.apps.androidtwitterclient.models.User;
 import com.loopj.android.http.JsonHttpResponseHandler;
+
+import eu.erikw.PullToRefreshListView;
+import eu.erikw.PullToRefreshListView.OnRefreshListener;
 
 public class TimelineActivity extends Activity {
 	public static final String TAG = "TWITTER";
 	public static final int REQUEST_CODE = 100;
 	public long maxId;
 	public User user;
-	public ListView lvTweets;
+	public PullToRefreshListView lvTweets;
 	public TweetAdapter tweetAdapter;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_timeline);
-		lvTweets = (ListView) findViewById(R.id.lvTweets);
+		lvTweets = (eu.erikw.PullToRefreshListView) findViewById(R.id.lvTweets);
+		lvTweets.setOnRefreshListener(new OnRefreshListener() {
+			
+			@Override
+			public void onRefresh() {
+				getHomeTimeline();
+			}
+		});
 		lvTweets.setOnScrollListener(new TweetsEndlessScrollListener());
 		TwitterClientApp.getRestClient().getCredentials(
 				new JsonHttpResponseHandler() {
@@ -55,14 +65,17 @@ public class TimelineActivity extends Activity {
 										+ jsonArray.length());
 						ArrayList<Tweet> tweetList = Tweet.fromJSON(jsonArray);
 						maxId = Tweet.getMaxId(tweetList);
-						Log.d(TAG, jsonArray.toString());
-						lvTweets = (ListView) findViewById(R.id.lvTweets);
 						tweetAdapter = new TweetAdapter(getBaseContext(), tweetList);
-						for (int i = 0; i < tweetAdapter.getCount(); i++) {
-							Log.d(TAG,tweetAdapter.getItem(i).toString());
-						}
 						lvTweets.setAdapter(tweetAdapter);
+						
+						lvTweets.onRefreshComplete();
 
+					}
+					
+					@Override
+					public void onFailure(Throwable e, JSONArray array) {
+						Log.e(TAG, "whoops, there was a problem in home timeline getting." + e.getMessage());
+						Toast.makeText(getBaseContext(), "Some network problem, try again later!", Toast.LENGTH_SHORT ).show();
 					}
 				});
 
@@ -82,9 +95,6 @@ public class TimelineActivity extends Activity {
 		Intent i = new Intent(getApplicationContext(), ComposeActivity.class);
 		if (user != null) {
 			Log.i(TAG, "user is: " + user.toString());
-			// i.putExtra("name", user.getName());
-			// i.putExtra("screenName", user.getScreenName());
-			// i.putExtra("imageUrl", user.getProfileImageUrl());
 			i.putExtra("user", user);
 		}
 		Log.d(TAG, "Going into Compose window");

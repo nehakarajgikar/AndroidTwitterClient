@@ -11,11 +11,8 @@ import android.text.Editable;
 import android.text.Html;
 import android.text.TextWatcher;
 import android.util.Log;
-import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
-import android.view.View.OnKeyListener;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -105,6 +102,13 @@ public class ComposeActivity extends Activity {
 								"Sucessfully tweeted, res object is: " + jsonObject.toString());
 						// super.onSuccess(arg0);
 
+					}
+					
+					@Override
+					public void onFailure(Throwable e, JSONObject obj) {
+						Log.e(TAG, "Some problem with posting the tweet, try again later");
+						Log.e(TAG, e.getMessage());
+						Toast.makeText(getBaseContext(), "Some network problem, couldn't tweet, try again later!", Toast.LENGTH_SHORT ).show();
 					}
 
 				});
