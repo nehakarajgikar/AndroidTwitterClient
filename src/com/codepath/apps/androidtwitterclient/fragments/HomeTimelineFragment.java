@@ -9,28 +9,35 @@ import android.os.Bundle;
 import android.util.Log;
 import android.widget.Toast;
 
-import com.codepath.apps.androidtwitterclient.EndlessScrollListener;
 import com.codepath.apps.androidtwitterclient.TweetAdapter;
 import com.codepath.apps.androidtwitterclient.TwitterClientApp;
 import com.codepath.apps.androidtwitterclient.models.Tweet;
 import com.codepath.apps.androidtwitterclient.models.User;
 import com.loopj.android.http.JsonHttpResponseHandler;
 
-import eu.erikw.PullToRefreshListView.OnRefreshListener;
-
 public class HomeTimelineFragment extends TweetsListFragment {
-	TweetsEndlessScrollListener scrollListener;
+	
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		Log.i(TAG, "in onCreate in HomeTimelineFragment");
 		super.onCreate(savedInstanceState);
+		ArrayList<Tweet> tweets = new ArrayList<Tweet>();
+		adapter = new TweetAdapter(getActivity(), tweets);
 		scrollListener = new TweetsEndlessScrollListener();
+		onRefreshListener = new TweetsOnRefreshListener();
 		getUserCredentials();
-		getHomeTimeline();
+		getTweets();
 
 	}
 
+	@Override
+	protected void getTweets() {
+		getHomeTimeline();
+
+	}
+	
+	
 	public void getUserCredentials() {
 		Log.i(TAG, "in getUserCredentials");
 		TwitterClientApp.getRestClient().getCredentials(
@@ -45,26 +52,25 @@ public class HomeTimelineFragment extends TweetsListFragment {
 	}
 
 	public void getHomeTimeline() {
-		Log.i(TAG, "Getting home timeline");
+		Log.i(TAG, "Getting home timeline, with maxId: " + maxId);
 		TwitterClientApp.getRestClient().getHomeTimeline(maxId,
 				new JsonHttpResponseHandler() {
 					@Override
+					public void onStart() {
+						super.onStart();
+						Log.i(TAG, "start home timeline request");
+					}
+
+					@Override
 					public void onSuccess(JSONArray jsonArray) {
+						Log.i(TAG, "Woohoo, got tweets!");
 						ArrayList<Tweet> tweetList = Tweet.fromJSON(jsonArray);
-						if(adapter==null){
-							Log.i(TAG, "adapter is null, redefining");
-						adapter = new TweetAdapter(getActivity(), tweetList);
-						lvTweets.setAdapter(adapter);
-						
-						}else{
-							adapter.clear();
-							lvTweets.setAdapter(adapter);
-							lvTweets.setOnScrollListener(scrollListener);
-							adapter.addAll(tweetList);
-							Log.i(TAG,"adapter is not null, not redefining, adapter count is: "+adapter.getCount());
-							
-						}
-						lvTweets.setOnRefreshListener(new TweetsOnRefreshListener());
+						adapter.clear();
+						adapter.addAll(tweetList);
+						Log.i(TAG,
+								"adapter is not null, not redefining, adapter count is: "
+										+ adapter.getCount());
+
 						Log.d(TAG,
 								"Got tweets on home timeline, first one, array size is: "
 										+ jsonArray.length());
@@ -88,26 +94,5 @@ public class HomeTimelineFragment extends TweetsListFragment {
 
 	}
 
-	protected class TweetsEndlessScrollListener extends EndlessScrollListener {
-		@Override
-		public void onLoadMore(int page, int totalItemsCount) {
-			Log.i(TAG, "in On load more: what's maxid: " + maxId);
-			Log.i(TAG, "in On load more: what's page: " + page);
-			Log.i(TAG, "in On load more: what's totalItemscount: " + totalItemsCount);
-			getHomeTimeline();
-		}
-	}
-
-	protected class TweetsOnRefreshListener implements OnRefreshListener {
-
-		@Override
-		public void onRefresh() {
-			Log.i(TAG, "in onRefresh in TweetsOnRefreshListener");
-			adapter.clear();
-			maxId = 0;
-			getHomeTimeline();
-
-		}
-
-	}
+	
 }
