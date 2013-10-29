@@ -5,11 +5,13 @@ import java.util.ArrayList;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import android.content.SharedPreferences;
+import android.content.SharedPreferences.Editor;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.util.Log;
 import android.widget.Toast;
 
-import com.codepath.apps.androidtwitterclient.TimelineActivity;
 import com.codepath.apps.androidtwitterclient.TweetAdapter;
 import com.codepath.apps.androidtwitterclient.TwitterClientApp;
 import com.codepath.apps.androidtwitterclient.models.Tweet;
@@ -37,8 +39,7 @@ public class HomeTimelineFragment extends TweetsListFragment {
 		getHomeTimeline();
 
 	}
-	
-	
+
 	public void getUserCredentials() {
 		Log.i(TAG, "in getUserCredentials");
 		TwitterClientApp.getRestClient().getCredentials(
@@ -46,7 +47,12 @@ public class HomeTimelineFragment extends TweetsListFragment {
 					@Override
 					public void onSuccess(JSONObject jsonObject) {
 						user = User.fromJSON(jsonObject);
-						((TimelineActivity)getActivity()).setUser(user);
+						user.save();
+						SharedPreferences pref = PreferenceManager
+								.getDefaultSharedPreferences(getActivity());
+						Editor edit = pref.edit();
+						edit.putLong("userId", user.getUserId());
+						edit.commit();
 						Log.d(TAG, "Getting user: " + user);
 					}
 
@@ -98,9 +104,8 @@ public class HomeTimelineFragment extends TweetsListFragment {
 
 	@Override
 	protected void setMaxIdToZero() {
-		this.maxId=0;
-		
+		this.maxId = 0;
+
 	}
 
-	
 }

@@ -14,14 +14,13 @@ import android.view.MenuItem;
 import com.codepath.apps.androidtwitterclient.fragments.HomeTimelineFragment;
 import com.codepath.apps.androidtwitterclient.fragments.MentionsTimelineFragment;
 import com.codepath.apps.androidtwitterclient.models.Tweet;
-import com.codepath.apps.androidtwitterclient.models.User;
 
 public class TimelineActivity extends FragmentActivity implements TabListener{
 	public static final String TAG = "TWITTER";
 	public static final int REQUEST_CODE = 100;
 	private static final int REQUEST_CODE_FOR_PROFILE_VIEW = 101;
 	// public long maxId;
-	public User user;
+	
 	// public PullToRefreshListView lvTweets;
 	public TweetAdapter tweetAdapter;
 
@@ -46,16 +45,10 @@ public class TimelineActivity extends FragmentActivity implements TabListener{
 
 	}
 	
-	public void setUser(User user){
-		this.user = user;
-	}
+
 	
 	public void onComposeAction(MenuItem mi) {
 		Intent i = new Intent(getApplicationContext(), ComposeActivity.class);
-		if (user != null) {
-			Log.i(TAG, "user is: " + user.toString());
-			i.putExtra("user", user);
-		}
 		Log.d(TAG, "Going into Compose window");
 		startActivityForResult(i, REQUEST_CODE);
 	}
@@ -63,9 +56,6 @@ public class TimelineActivity extends FragmentActivity implements TabListener{
 	public void onProfileView(MenuItem mi){
 		
 		Intent i = new Intent(getApplicationContext(), ProfileActivity.class);
-		if(user!=null){
-			i.putExtra("user", user);
-		}
 		startActivityForResult(i, REQUEST_CODE_FOR_PROFILE_VIEW);
 	}
 	@Override

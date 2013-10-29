@@ -6,7 +6,9 @@ import org.json.JSONObject;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.text.Editable;
 import android.text.Html;
 import android.text.TextWatcher;
@@ -18,6 +20,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.activeandroid.query.Select;
 import com.codepath.apps.androidtwitterclient.models.Tweet;
 import com.codepath.apps.androidtwitterclient.models.User;
 import com.loopj.android.http.JsonHttpResponseHandler;
@@ -27,12 +30,20 @@ public class ComposeActivity extends Activity {
 	public static final String TAG = "TWITTER";
 	public User user;
 	public TextView tvNumCharsRemaining;
+	
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
+//		getUserCredentials();
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_compose);
-		user = (User) getIntent().getSerializableExtra("user");
+		SharedPreferences pref =   
+		    PreferenceManager.getDefaultSharedPreferences(this);
+		long userId = pref.getLong("userId", 0);
+		Log.i(TAG,"got userId: "+userId);
+		this.user = new Select().from(User.class).where("userId = ?",userId).executeSingle();
+		Log.i(TAG, "user is: "+this.user);
+//		user = (User) getIntent().getSerializableExtra("user");
 		ImageView ivProfile = (ImageView) findViewById(R.id.ivComposeProfile);
 		ImageLoader.getInstance()
 				.displayImage(user.getProfileImageUrl(), ivProfile);
@@ -68,6 +79,20 @@ public class ComposeActivity extends Activity {
 			}
 		});
 
+	}
+	
+	public void getUserCredentials() {
+		Log.i(TAG, "in getUserCredentials");
+		TwitterClientApp.getRestClient().getCredentials(
+				new JsonHttpResponseHandler() {
+					@Override
+					public void onSuccess(JSONObject jsonObject) {
+						user = User.fromJSON(jsonObject);
+//						((TimelineActivity)getActivity()).setUser(user);
+						Log.d(TAG, "Getting user: " + user);
+					}
+
+				});
 	}
 
 	@Override

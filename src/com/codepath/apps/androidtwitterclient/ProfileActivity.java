@@ -1,16 +1,17 @@
 package com.codepath.apps.androidtwitterclient;
 
-import org.json.JSONObject;
-
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.v4.app.FragmentActivity;
 import android.util.Log;
 import android.view.Menu;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.activeandroid.query.Select;
 import com.codepath.apps.androidtwitterclient.models.User;
-import com.loopj.android.http.JsonHttpResponseHandler;
 import com.nostra13.universalimageloader.core.ImageLoader;
 
 public class ProfileActivity extends FragmentActivity {
@@ -21,10 +22,20 @@ public class ProfileActivity extends FragmentActivity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_profile);
-		this.user = (User) getIntent().getSerializableExtra("user");
-		Log.i(TAG, "what's user in profile activity: " + user);
-		getActionBar().setTitle("@" + user.getScreenName());
-		populateUser();
+		SharedPreferences pref = PreferenceManager
+				.getDefaultSharedPreferences(this);
+		long userId = pref.getLong("userId", 0);
+		Log.i(TAG, "Wthats userId; " + userId);
+		this.user = new Select().from(User.class).where("userId = ?", userId)
+				.executeSingle();
+		if (this.user == null) {
+			Toast.makeText(getApplicationContext(),
+					"Whoops! Something's wrong! Try again later!", Toast.LENGTH_SHORT)
+					.show();
+		} else {
+			Log.i(TAG, "what's user in profile activity: " + user);
+			populateUser();
+		}
 	}
 
 	private void populateUser() {
@@ -39,6 +50,7 @@ public class ProfileActivity extends FragmentActivity {
 		ImageView ivProfile = (ImageView) findViewById(R.id.ivProfileImage);
 		ImageLoader.getInstance()
 				.displayImage(user.getProfileImageUrl(), ivProfile);
+		getActionBar().setTitle("@" + user.getScreenName());
 
 	}
 

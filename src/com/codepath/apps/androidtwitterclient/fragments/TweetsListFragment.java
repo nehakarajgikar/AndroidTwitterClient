@@ -63,18 +63,9 @@ public abstract class TweetsListFragment extends Fragment {
 	}
 
 	protected class TweetsEndlessScrollListener extends EndlessScrollListener {
-//		@Override
-//		public void onScroll(AbsListView view, int firstVisibleItem,
-//				int visibleItemCount, int totalItemCount) {
-////			Log.i(TAG,"Wowee, scrolling!!");
-//			super.onScroll(view, firstVisibleItem, visibleItemCount, totalItemCount);
-//		}
+
 		
-		@Override
-		public void onScrollStateChanged(AbsListView view, int scrollState) {
-//			Log.i(TAG,"Damn, scroll state changed");
-			super.onScrollStateChanged(view, scrollState);
-		}
+
 		@Override
 		public void onLoadMore(int page, int totalItemsCount) {
 //			Log.i(TAG, "in On load more: what's maxid: " + maxId);
