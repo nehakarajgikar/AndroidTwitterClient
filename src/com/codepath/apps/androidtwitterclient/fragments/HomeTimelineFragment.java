@@ -17,7 +17,7 @@ import com.codepath.apps.androidtwitterclient.models.User;
 import com.loopj.android.http.JsonHttpResponseHandler;
 
 public class HomeTimelineFragment extends TweetsListFragment {
-	
+	long maxId;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -94,6 +94,12 @@ public class HomeTimelineFragment extends TweetsListFragment {
 					}
 				});
 
+	}
+
+	@Override
+	protected void setMaxIdToZero() {
+		this.maxId=0;
+		
 	}
 
 	

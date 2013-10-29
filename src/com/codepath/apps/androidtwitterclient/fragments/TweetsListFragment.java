@@ -18,7 +18,7 @@ import eu.erikw.PullToRefreshListView.OnRefreshListener;
 
 public abstract class TweetsListFragment extends Fragment {
 	TweetAdapter adapter = null;
-	long maxId = 0;
+	
 	User user = null;
 	public static String TAG = "TWITTER";
 	public PullToRefreshListView lvTweets;
@@ -63,12 +63,12 @@ public abstract class TweetsListFragment extends Fragment {
 	}
 
 	protected class TweetsEndlessScrollListener extends EndlessScrollListener {
-		@Override
-		public void onScroll(AbsListView view, int firstVisibleItem,
-				int visibleItemCount, int totalItemCount) {
-//			Log.i(TAG,"Wowee, scrolling!!");
-			super.onScroll(view, firstVisibleItem, visibleItemCount, totalItemCount);
-		}
+//		@Override
+//		public void onScroll(AbsListView view, int firstVisibleItem,
+//				int visibleItemCount, int totalItemCount) {
+////			Log.i(TAG,"Wowee, scrolling!!");
+//			super.onScroll(view, firstVisibleItem, visibleItemCount, totalItemCount);
+//		}
 		
 		@Override
 		public void onScrollStateChanged(AbsListView view, int scrollState) {
@@ -77,7 +77,7 @@ public abstract class TweetsListFragment extends Fragment {
 		}
 		@Override
 		public void onLoadMore(int page, int totalItemsCount) {
-			Log.i(TAG, "in On load more: what's maxid: " + maxId);
+//			Log.i(TAG, "in On load more: what's maxid: " + maxId);
 			Log.i(TAG, "in On load more: what's page: " + page);
 			Log.i(TAG, "in On load more: what's totalItemscount: " + totalItemsCount);
 			getTweets();
@@ -91,11 +91,12 @@ public abstract class TweetsListFragment extends Fragment {
 		public void onRefresh() {
 			Log.i(TAG, "in onRefresh in TweetsOnRefreshListener");
 			adapter.clear();
-			maxId = 0;
+			setMaxIdToZero();
 			getTweets();
 
 		}
 
 	}
+	protected abstract void setMaxIdToZero();
 
 }

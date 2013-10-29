@@ -14,6 +14,7 @@ import com.codepath.apps.androidtwitterclient.models.Tweet;
 import com.loopj.android.http.JsonHttpResponseHandler;
 
 public class UserTimelineFragment extends TweetsListFragment {
+	long maxId;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -23,15 +24,16 @@ public class UserTimelineFragment extends TweetsListFragment {
 		adapter = new TweetAdapter(getActivity(), tweets);
 		scrollListener = new TweetsEndlessScrollListener();
 		onRefreshListener = new TweetsOnRefreshListener();
-//		getUserCredentials();
+		// getUserCredentials();
 		getTweets();
 
 	}
+
 	@Override
 	protected void getTweets() {
 		getUserTimeline();
 	}
-	
+
 	public void getUserTimeline() {
 		Log.i(TAG, "Getting home timeline, with maxId: " + maxId);
 		TwitterClientApp.getRestClient().getUserTimeline(maxId,
@@ -68,6 +70,12 @@ public class UserTimelineFragment extends TweetsListFragment {
 								.show();
 					}
 				});
+
+	}
+
+	@Override
+	protected void setMaxIdToZero() {
+		this.maxId = 0;
 
 	}
 
