@@ -3,21 +3,17 @@ package com.codepath.apps.androidtwitterclient.fragments;
 import java.util.ArrayList;
 
 import org.json.JSONArray;
-import org.json.JSONObject;
 
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.Toast;
 
-import com.codepath.apps.androidtwitterclient.TimelineActivity;
 import com.codepath.apps.androidtwitterclient.TweetAdapter;
 import com.codepath.apps.androidtwitterclient.TwitterClientApp;
 import com.codepath.apps.androidtwitterclient.models.Tweet;
-import com.codepath.apps.androidtwitterclient.models.User;
 import com.loopj.android.http.JsonHttpResponseHandler;
 
-public class HomeTimelineFragment extends TweetsListFragment {
-	
+public class UserTimelineFragment extends TweetsListFragment {
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -27,40 +23,23 @@ public class HomeTimelineFragment extends TweetsListFragment {
 		adapter = new TweetAdapter(getActivity(), tweets);
 		scrollListener = new TweetsEndlessScrollListener();
 		onRefreshListener = new TweetsOnRefreshListener();
-		getUserCredentials();
+//		getUserCredentials();
 		getTweets();
 
 	}
-
 	@Override
 	protected void getTweets() {
-		getHomeTimeline();
-
+		getUserTimeline();
 	}
 	
-	
-	public void getUserCredentials() {
-		Log.i(TAG, "in getUserCredentials");
-		TwitterClientApp.getRestClient().getCredentials(
-				new JsonHttpResponseHandler() {
-					@Override
-					public void onSuccess(JSONObject jsonObject) {
-						user = User.fromJSON(jsonObject);
-						((TimelineActivity)getActivity()).setUser(user);
-						Log.d(TAG, "Getting user: " + user);
-					}
-
-				});
-	}
-
-	public void getHomeTimeline() {
+	public void getUserTimeline() {
 		Log.i(TAG, "Getting home timeline, with maxId: " + maxId);
-		TwitterClientApp.getRestClient().getHomeTimeline(maxId,
+		TwitterClientApp.getRestClient().getUserTimeline(maxId,
 				new JsonHttpResponseHandler() {
 					@Override
 					public void onStart() {
 						super.onStart();
-						Log.i(TAG, "start home timeline request");
+						Log.i(TAG, "start user timeline request");
 					}
 
 					@Override
@@ -69,10 +48,6 @@ public class HomeTimelineFragment extends TweetsListFragment {
 						ArrayList<Tweet> tweetList = Tweet.fromJSON(jsonArray);
 						adapter.clear();
 						adapter.addAll(tweetList);
-						Log.i(TAG,
-								"adapter is not null, not redefining, adapter count is: "
-										+ adapter.getCount());
-
 						Log.d(TAG,
 								"Got tweets on home timeline, first one, array size is: "
 										+ jsonArray.length());
@@ -96,5 +71,4 @@ public class HomeTimelineFragment extends TweetsListFragment {
 
 	}
 
-	
 }

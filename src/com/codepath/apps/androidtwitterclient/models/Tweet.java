@@ -113,7 +113,7 @@ public class Tweet implements Serializable {
 
 		}
 		
-		return least-1;
+		return least;
 	}
 
 	public String toString(){

@@ -49,7 +49,9 @@ public abstract class TweetsListFragment extends Fragment {
 		lvTweets.setAdapter(adapter);
 		Log.i(TAG, "is scroll listener set? "+scrollListener);
 		lvTweets.setOnScrollListener(scrollListener);
+		
 		lvTweets.setOnRefreshListener(onRefreshListener);
+		
 		return view;
 	}
 
@@ -64,13 +66,13 @@ public abstract class TweetsListFragment extends Fragment {
 		@Override
 		public void onScroll(AbsListView view, int firstVisibleItem,
 				int visibleItemCount, int totalItemCount) {
-			Log.i(TAG,"Wowee, scrolling!!");
+//			Log.i(TAG,"Wowee, scrolling!!");
 			super.onScroll(view, firstVisibleItem, visibleItemCount, totalItemCount);
 		}
 		
 		@Override
 		public void onScrollStateChanged(AbsListView view, int scrollState) {
-			Log.i(TAG,"Damn, scroll state changed");
+//			Log.i(TAG,"Damn, scroll state changed");
 			super.onScrollStateChanged(view, scrollState);
 		}
 		@Override

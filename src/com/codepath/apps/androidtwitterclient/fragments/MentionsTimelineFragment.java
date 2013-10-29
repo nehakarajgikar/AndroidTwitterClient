@@ -22,7 +22,7 @@ public class MentionsTimelineFragment extends TweetsListFragment {
 		adapter = new TweetAdapter(getActivity(), tweets);
 		scrollListener = new TweetsEndlessScrollListener();
 		onRefreshListener = new TweetsOnRefreshListener();
-		getUserCredentials();
+//		getUserCredentials();
 		getTweets();
 
 	}
