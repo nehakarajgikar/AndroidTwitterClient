@@ -15,6 +15,8 @@ import com.codepath.apps.androidtwitterclient.models.User;
 import com.loopj.android.http.JsonHttpResponseHandler;
 
 public class MentionsTimelineFragment extends TweetsListFragment {
+	long maxId;
+
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -22,7 +24,7 @@ public class MentionsTimelineFragment extends TweetsListFragment {
 		adapter = new TweetAdapter(getActivity(), tweets);
 		scrollListener = new TweetsEndlessScrollListener();
 		onRefreshListener = new TweetsOnRefreshListener();
-//		getUserCredentials();
+		// getUserCredentials();
 		getTweets();
 
 	}
@@ -41,7 +43,7 @@ public class MentionsTimelineFragment extends TweetsListFragment {
 	}
 
 	public void getMentionsTimeline() {
-		TwitterClientApp.getRestClient().getMentionsTimeline(0,
+		TwitterClientApp.getRestClient().getMentionsTimeline(maxId,
 				new JsonHttpResponseHandler() {
 					@Override
 					public void onStart() {
@@ -71,6 +73,12 @@ public class MentionsTimelineFragment extends TweetsListFragment {
 	protected void getTweets() {
 		Log.i(TAG, "In mentions getTweets");
 		getMentionsTimeline();
+
+	}
+
+	@Override
+	protected void setMaxIdToZero() {
+		this.maxId = 0;
 
 	}
 }
