@@ -11,6 +11,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.activeandroid.query.Select;
+import com.codepath.apps.androidtwitterclient.fragments.UserTimelineFragment;
 import com.codepath.apps.androidtwitterclient.models.User;
 import com.nostra13.universalimageloader.core.ImageLoader;
 
@@ -22,12 +23,34 @@ public class ProfileActivity extends FragmentActivity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_profile);
-		SharedPreferences pref = PreferenceManager
-				.getDefaultSharedPreferences(this);
-		long userId = pref.getLong("userId", 0);
-		Log.i(TAG, "Wthats userId; " + userId);
-		this.user = new Select().from(User.class).where("userId = ?", userId)
-				.executeSingle();
+
+		android.support.v4.app.FragmentManager fragmentManager = getSupportFragmentManager();
+		android.support.v4.app.FragmentTransaction fts = fragmentManager
+				.beginTransaction();
+		UserTimelineFragment userTimelineFragment = new UserTimelineFragment();
+		this.user = (User) getIntent().getSerializableExtra("profileId");
+
+		Bundle bundle = new Bundle();
+		// bundle.putSerializable("profileId", particularUser);
+
+		Log.i(TAG, "did we get the user who's timeline we're to show: " + this.user);
+		if (this.user == null) {
+			// this means that its the current user's tweets we're looking for
+
+			SharedPreferences pref = PreferenceManager
+					.getDefaultSharedPreferences(this);
+
+			long userId = pref.getLong("userId", 0);
+			Log.i(TAG, "Wthats userId; " + userId);
+			this.user = new Select().from(User.class).where("userId = ?", userId)
+					.executeSingle();
+
+		}
+		bundle.putSerializable("profileId", this.user);
+		userTimelineFragment.setArguments(bundle);
+		fts.replace(R.id.frame_container_for_profile, userTimelineFragment);
+		fts.commit();
+
 		if (this.user == null) {
 			Toast.makeText(getApplicationContext(),
 					"Whoops! Something's wrong! Try again later!", Toast.LENGTH_SHORT)

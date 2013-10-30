@@ -6,16 +6,20 @@ package com.codepath.apps.androidtwitterclient;
 import java.util.List;
 
 import android.content.Context;
+import android.content.Intent;
 import android.text.Html;
 import android.text.format.DateUtils;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.codepath.apps.androidtwitterclient.models.Tweet;
+import com.codepath.apps.androidtwitterclient.models.User;
 import com.nostra13.universalimageloader.core.ImageLoader;
 
 /**
@@ -23,9 +27,11 @@ import com.nostra13.universalimageloader.core.ImageLoader;
  * 
  */
 public class TweetAdapter extends ArrayAdapter<Tweet> {
-
+	Context c;
 	public TweetAdapter(Context context, List<Tweet> tweets) {
+		
 		super(context, 0, tweets);
+		c = context;
 	}
 
 	@Override
@@ -39,8 +45,22 @@ public class TweetAdapter extends ArrayAdapter<Tweet> {
 
 		Tweet tweet = (Tweet) getItem(position);
 		ImageView imageView = (ImageView) view.findViewById(R.id.ivProfile);
+		imageView.setTag(tweet.getUser());
 		ImageLoader.getInstance().displayImage(
 				tweet.getUser().getProfileImageUrl(), imageView);
+		imageView.setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				Toast.makeText(getContext(), "Toasting!", Toast.LENGTH_SHORT).show();
+				Intent i = new Intent(c,ProfileActivity.class);
+				User user = (User) v.findViewById(R.id.ivProfile).getTag();
+				i.putExtra("profileId", user);
+				c.startActivity(i);
+				
+				
+			}
+		});
 
 		TextView name = (TextView) view.findViewById(R.id.tvName);
 		String formattedName = "<b>" + tweet.getUser().getName() + "    </b>"

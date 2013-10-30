@@ -6,7 +6,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AbsListView;
 
 import com.codepath.apps.androidtwitterclient.EndlessScrollListener;
 import com.codepath.apps.androidtwitterclient.R;
@@ -20,6 +19,7 @@ public abstract class TweetsListFragment extends Fragment {
 	TweetAdapter adapter = null;
 	
 	User user = null;
+	long userId = 0;
 	public static String TAG = "TWITTER";
 	public PullToRefreshListView lvTweets;
 	TweetsEndlessScrollListener scrollListener;
@@ -89,5 +89,5 @@ public abstract class TweetsListFragment extends Fragment {
 
 	}
 	protected abstract void setMaxIdToZero();
-
+//	protected abstract void setUserId();
 }

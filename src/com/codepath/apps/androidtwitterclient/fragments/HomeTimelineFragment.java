@@ -29,7 +29,14 @@ public class HomeTimelineFragment extends TweetsListFragment {
 		adapter = new TweetAdapter(getActivity(), tweets);
 		scrollListener = new TweetsEndlessScrollListener();
 		onRefreshListener = new TweetsOnRefreshListener();
-		getUserCredentials();
+		SharedPreferences pref = PreferenceManager
+				.getDefaultSharedPreferences(getActivity());
+		long userId = pref.getLong("userId", 0);
+		Log.i(TAG, "Wthats userId; " + userId);
+		if (userId == 0) {
+			//don't call user credentials for no reason
+			getUserCredentials();
+		}
 		getTweets();
 
 	}

@@ -11,20 +11,28 @@ import android.widget.Toast;
 import com.codepath.apps.androidtwitterclient.TweetAdapter;
 import com.codepath.apps.androidtwitterclient.TwitterClientApp;
 import com.codepath.apps.androidtwitterclient.models.Tweet;
+import com.codepath.apps.androidtwitterclient.models.User;
 import com.loopj.android.http.JsonHttpResponseHandler;
 
 public class UserTimelineFragment extends TweetsListFragment {
 	long maxId;
-
+	
+	User user;
+	long profileId;
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
-		Log.i(TAG, "in onCreate in HomeTimelineFragment");
+		Log.i(TAG, "in onCreate in UserTimelineFragment");
 		super.onCreate(savedInstanceState);
 		ArrayList<Tweet> tweets = new ArrayList<Tweet>();
 		adapter = new TweetAdapter(getActivity(), tweets);
 		scrollListener = new TweetsEndlessScrollListener();
 		onRefreshListener = new TweetsOnRefreshListener();
 		// getUserCredentials();
+		
+		Bundle bundle = getArguments();
+		User u = (User) bundle.getSerializable("profileId");
+		profileId = u.getUserId();
+		Log.i(TAG, "did we get screenname here?"+profileId);
 		getTweets();
 
 	}
@@ -35,8 +43,8 @@ public class UserTimelineFragment extends TweetsListFragment {
 	}
 
 	public void getUserTimeline() {
-		Log.i(TAG, "Getting home timeline, with maxId: " + maxId);
-		TwitterClientApp.getRestClient().getUserTimeline(maxId,
+		Log.i(TAG, "Getting user timeline, with maxId: " + maxId + " and userId is: "+profileId);
+		TwitterClientApp.getRestClient().getUserTimeline(maxId,profileId,
 				new JsonHttpResponseHandler() {
 					@Override
 					public void onStart() {

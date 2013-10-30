@@ -3,7 +3,6 @@ package com.codepath.apps.androidtwitterclient.fragments;
 import java.util.ArrayList;
 
 import org.json.JSONArray;
-import org.json.JSONObject;
 
 import android.os.Bundle;
 import android.util.Log;
@@ -11,7 +10,6 @@ import android.util.Log;
 import com.codepath.apps.androidtwitterclient.TweetAdapter;
 import com.codepath.apps.androidtwitterclient.TwitterClientApp;
 import com.codepath.apps.androidtwitterclient.models.Tweet;
-import com.codepath.apps.androidtwitterclient.models.User;
 import com.loopj.android.http.JsonHttpResponseHandler;
 
 public class MentionsTimelineFragment extends TweetsListFragment {
@@ -24,23 +22,10 @@ public class MentionsTimelineFragment extends TweetsListFragment {
 		adapter = new TweetAdapter(getActivity(), tweets);
 		scrollListener = new TweetsEndlessScrollListener();
 		onRefreshListener = new TweetsOnRefreshListener();
-		// getUserCredentials();
 		getTweets();
 
 	}
 
-	public void getUserCredentials() {
-		Log.i(TAG, "in getUserCredentials");
-		TwitterClientApp.getRestClient().getCredentials(
-				new JsonHttpResponseHandler() {
-					@Override
-					public void onSuccess(JSONObject jsonObject) {
-						user = User.fromJSON(jsonObject);
-						Log.d(TAG, "Getting user: " + user);
-					}
-
-				});
-	}
 
 	public void getMentionsTimeline() {
 		TwitterClientApp.getRestClient().getMentionsTimeline(maxId,
