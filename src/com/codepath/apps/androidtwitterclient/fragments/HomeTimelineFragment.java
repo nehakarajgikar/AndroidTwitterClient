@@ -37,7 +37,7 @@ public class HomeTimelineFragment extends TweetsListFragment {
 			//don't call user credentials for no reason
 			getUserCredentials();
 		}
-		getTweets();
+//		getTweets();
 
 	}
 
@@ -80,7 +80,7 @@ public class HomeTimelineFragment extends TweetsListFragment {
 					public void onSuccess(JSONArray jsonArray) {
 						Log.i(TAG, "Woohoo, got tweets!");
 						ArrayList<Tweet> tweetList = Tweet.fromJSON(jsonArray);
-						adapter.clear();
+//						adapter.clear();
 						adapter.addAll(tweetList);
 						Log.i(TAG,
 								"adapter is not null, not redefining, adapter count is: "

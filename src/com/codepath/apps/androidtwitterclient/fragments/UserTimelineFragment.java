@@ -56,7 +56,7 @@ public class UserTimelineFragment extends TweetsListFragment {
 					public void onSuccess(JSONArray jsonArray) {
 						Log.i(TAG, "Woohoo, got tweets!");
 						ArrayList<Tweet> tweetList = Tweet.fromJSON(jsonArray);
-						adapter.clear();
+//						adapter.clear();
 						adapter.addAll(tweetList);
 						Log.d(TAG,
 								"Got tweets on home timeline, first one, array size is: "

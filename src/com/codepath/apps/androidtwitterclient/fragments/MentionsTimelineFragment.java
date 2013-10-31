@@ -22,10 +22,9 @@ public class MentionsTimelineFragment extends TweetsListFragment {
 		adapter = new TweetAdapter(getActivity(), tweets);
 		scrollListener = new TweetsEndlessScrollListener();
 		onRefreshListener = new TweetsOnRefreshListener();
-		getTweets();
+		// getTweets();
 
 	}
-
 
 	public void getMentionsTimeline() {
 		TwitterClientApp.getRestClient().getMentionsTimeline(maxId,
@@ -41,13 +40,16 @@ public class MentionsTimelineFragment extends TweetsListFragment {
 						super.onSuccess(jsonArray);
 						Log.i(TAG, "mentions timeline: " + jsonArray.length());
 						ArrayList<Tweet> tweetList = Tweet.fromJSON(jsonArray);
-						getAdapter().clear();
-						getAdapter().addAll(tweetList);
-						Log.i(
-								TAG,
-								"mentions timeline: last tweet is: "
-										+ tweetList.get(tweetList.size() - 1));
-						maxId = Tweet.getMaxId(tweetList);
+						// getAdapter().clear();
+						Log.i(TAG, "Give me tweetlist: " + tweetList);
+						if (!tweetList.isEmpty()) {
+							getAdapter().addAll(tweetList);
+							Log.i(
+									TAG,
+									"mentions timeline: last tweet is: "
+											+ tweetList.get(tweetList.size() - 1));
+							maxId = Tweet.getMaxId(tweetList);
+						}
 						lvTweets.onRefreshComplete();
 
 					}
